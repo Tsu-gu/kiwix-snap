@@ -1,0 +1,71 @@
+name: kiwix-tsugu
+base: core24
+version: '0.96.0'
+summary: ZIM file opener
+description: |
+  asdasd
+grade: stable
+confinement: strict
+
+platforms:
+  amd64:
+  arm64:
+
+lint:
+  ignore:
+    - classic
+    - library
+
+layout:
+    /usr/share/qt5:
+        bind: $SNAP/usr/share/qt5
+        
+apps:
+  kiwix-tsugu:
+    command: usr/bin/kiwix-desktop
+    environment:
+      HOME: "$SNAP_USER_DATA"  
+      XDG_DATA_HOME: "$SNAP_USER_DATA"  
+      GIO_EXTRA_MODULES: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gio/modules
+      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libproxy:$SNAP/usr/share/icons:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt5/lib:$SNAP/lib:$SNAP/usr/lib:$LD_LIBRARY_PATH
+      QT_PLUGIN_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt5/plugins
+      QTWEBENGINEPROCESS_PATH: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt5/libexec/QtWebEngineProcess
+      QTWEBENGINE_RESOURCES_PATH: $SNAP/usr/share/qt5/resources
+      QTWEBENGINE_LOCALES_PATH: $SNAP/usr/share/qt5/translations/qtwebengine_locales
+      TMPDIR: $SNAP_USER_DATA/tmp
+      ICON_THEME_PATH: $SNAP/usr/share/icons:$ICON_THEME_PATH
+    plugs:
+      - home
+      - network
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - opengl
+      - browser-support
+      - network-bind
+
+parts:
+  kiwix-tsugu:
+    plugin: nil
+    override-build: |
+      add-apt-repository ppa:kiwixteam/release -y
+      apt update
+      apt install kiwix -y
+    build-packages:
+      - software-properties-common  
+    stage-packages:
+     - kiwix
+     - libqt5webenginewidgets5
+     - libqt5gui5
+     - qt5-image-formats-plugins
+     - aria2
+     - libmicrohttpd12
+     - libproxy1v5
+     - libwayland-egl1
+     - qtwayland5
+     - libqt5webengine5
+     - libqt5core5a
+     - libproxy1-plugin-gsettings
+     - glib-networking
+     - dconf-gsettings-backend
